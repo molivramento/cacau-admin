@@ -14,8 +14,7 @@ export default function useAuth() {
       .then((res) => {
         SessionStorage.set("access_token", res.data.access_token);
         SessionStorage.set("refresh_token", res.data.refresh_token);
-        user.value = res.data;
-        store.authenticated = res.data;
+        store.authenticated = true;
       })
       .catch((error) => {
         return error.message;
@@ -23,12 +22,22 @@ export default function useAuth() {
   };
 
   const isLoggedIn = () => {
-    return !!store.authenticated;
+    if (SessionStorage.has("access_token")) {
+      store.authenticated = true;
+    }
+    return store.authenticated;
+  };
+
+  const logout = () => {
+    SessionStorage.remove("access_token");
+    SessionStorage.remove("refresh_token");
+    store.authenticated = false;
   };
 
   return {
     user,
     login,
     isLoggedIn,
+    logout,
   };
 }

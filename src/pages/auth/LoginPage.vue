@@ -15,6 +15,7 @@
             <q-btn label="Login" type="submit" color="primary" />
           </div>
         </q-form>
+        <q-btn color="primary" icon="check" label="OK" @click="handleLogout" />
       </q-card-section>
     </q-card>
   </q-page>
@@ -24,6 +25,7 @@
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import useAuth from "src/composables/useAuth";
+import { useAuthStore } from "src/stores/auth/authStore";
 
 export default defineComponent({
   name: "LoginPage",
@@ -36,7 +38,7 @@ export default defineComponent({
 
     const msg = ref("");
 
-    const { login } = useAuth();
+    const { login, logout } = useAuth();
 
     const router = useRouter();
 
@@ -49,9 +51,22 @@ export default defineComponent({
       }
     };
 
+    const handleLogout = async () => {
+      try {
+        await logout();
+        router.push({ name: "login" });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    const store = useAuthStore();
+    console.log(store.authenticated);
+
     return {
       data,
       handleLogin,
+      handleLogout,
     };
   },
 });

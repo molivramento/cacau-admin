@@ -45,6 +45,18 @@ export default route(function (/* { store, ssrContext } */) {
         name: "login",
       };
     }
+    if (
+      (isLoggedIn() && to.name === "login") ||
+      to.name === "loginDefault" ||
+      to.name === "register" ||
+      to.name === "forgot-password" ||
+      to.name === "verify-email" ||
+      to.name === "verify-email-success"
+    ) {
+      return {
+        name: "dashboard",
+      };
+    }
   });
 
   return Router;

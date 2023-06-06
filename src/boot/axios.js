@@ -27,12 +27,12 @@ async function refreshToken(error) {
         .then(async (res) => {
           console.log(res.data);
           SessionStorage.set("access_token", res.data.access_token);
-          SessionStorage.set("refresh_token", res.data.refresh_token);
           return resolve(res);
         })
         .catch((err) => {
           SessionStorage.remove("access_token");
           SessionStorage.remove("refresh_token");
+          store.authenticated = false;
           return reject(error);
         });
     } catch (err) {
