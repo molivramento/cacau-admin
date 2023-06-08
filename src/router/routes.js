@@ -25,6 +25,11 @@ const routes = [
         name: "dashboard",
         component: () => import("pages/app/DashboardPage.vue"),
       },
+      {
+        path: "category/:slug*",
+        name: "category",
+        component: () => import("pages/category/CategoryPage.vue"),
+      },
     ],
     meta: {
       requiresAuth: true,

@@ -1,36 +1,15 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
+  <q-layout class="row q-ml-md" view="hhh lpR fFf">
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
+      @mouseleave="mini = true"
+      @mouseenter="mini = false"
+      :mini="mini"
+      overlay="overlay"
     >
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -39,78 +18,77 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+    <div class="col-10 q-pl-xl q-py-sm q-pr-sm">
+      <q-page-container>
+        <router-view />
+      </q-page-container>
+    </div>
+
+    <div class="col-2">
+      <q-card class="my-card">
+        <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+        <q-card-section>
+          <div class="text-h6">Our Changing Planet</div>
+          <div class="text-subtitle2">by John Doe</div>
+        </q-card-section>
+        <q-card-section>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </q-card-section>
+      </q-card>
+      <q-separator spaced inset vertical dark />
+      <q-card class="my-card">
+        <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+        <q-card-section>
+          <div class="text-h6">Our Changing Planet</div>
+          <div class="text-subtitle2">by John Doe</div>
+        </q-card-section>
+        <q-card-section>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </q-card-section>
+      </q-card>
+    </div>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+import { defineComponent, ref, onUpdated } from "vue";
+import EssentialLink from "components/EssentialLink.vue";
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+  setup() {
+    const overlay = ref("true");
+    const menu = ref([
+      { title: "DASHBOARD", icon: "dashboard", to: "dashboard" },
+      { title: "PDV", icon: "mdi-printer-pos", to: "pos" },
+      { title: "CATEGORIAS", icon: "mdi-shape", to: "category" },
+      { title: "OPÇÕES", icon: "mdi-hexagon-multiple-outline", to: "options" },
+      { title: "PRODUTOS", icon: "mdi-cube", to: "products" },
+      { title: "VENDAS", icon: "mdi-credit-card-check-outline", to: "orders" },
+      { title: "CLIENTES", icon: "mdi-account-heart-outline", to: "customers" },
+      { title: "FRETE", icon: "mdi-truck-fast-outline", to: "frontEnd" },
+      { title: "FORNECEDOR", icon: "mdi-factory", to: "frontEnd" },
+    ]);
+
+    const leftDrawerOpen = ref(true);
+
+    const mini = ref(true);
+
+    onUpdated(() => {
+      return (leftDrawerOpen.value = true);
+    });
 
     return {
-      essentialLinks: linksList,
+      essentialLinks: menu,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      overlay,
+      mini,
+    };
+  },
+});
 </script>
