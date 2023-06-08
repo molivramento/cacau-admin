@@ -5,6 +5,10 @@ import { ref } from "vue";
 export const useCategoryStore = defineStore("category", () => {
   const categorySlug = ref([]);
 
+  const data = ref([]);
+
+  const parentCategory = ref([]);
+
   const addingCategory = ref(false);
 
   const getAll = async (filter) => {
@@ -18,9 +22,24 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
+  const create = async (data) => {
+    return await api
+      .post("categories/", data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return error.message;
+      });
+  };
+
   return {
     getAll,
     categorySlug,
     addingCategory,
+    create,
+    data,
+    getCategory,
+    parentCategory,
   };
 });
