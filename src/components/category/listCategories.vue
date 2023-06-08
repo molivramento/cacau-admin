@@ -18,7 +18,6 @@
           icon="mdi-plus"
           @click="store.addingCategory = true"
         />
-        {{ store.addingCategory }}
       </template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -58,7 +57,6 @@
 <script>
 import { defineComponent, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useRoute } from "vue-router";
 import { useCategoryStore } from "src/stores/category/categoryStore";
 import AddCategoryDialog from "src/components/category/addCategoryDialog.vue";
 
@@ -67,20 +65,12 @@ export default defineComponent({
 
   components: { AddCategoryDialog },
 
-  props: {
-    data: {
-      type: Array,
-    },
-  },
-
-  setup(props) {
+  setup() {
     const router = useRouter();
-
-    const route = useRoute();
 
     const store = useCategoryStore();
 
-    const rows = computed(() => props.data);
+    const rows = computed(() => store.data);
 
     const columns = [
       {
@@ -113,13 +103,13 @@ export default defineComponent({
         store.categorySlug.indexOf(slug) + 1,
         store.categorySlug.length
       );
-      rows.value = await [];
+      rows.value = [];
       router.push({ name: "category", params: { slug: store.categorySlug } });
     };
 
     const handleNext = async (slug) => {
       store.categorySlug.push(slug);
-      rows.value = await [];
+      rows.value = [];
       router.push({ name: "category", params: { slug: store.categorySlug } });
     };
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ListCategory :data="data" />
+    <ListCategory />
   </div>
 </template>
 
@@ -9,7 +9,6 @@ import { defineComponent, onBeforeMount, ref, watch } from "vue";
 import ListCategory from "src/components/category/listCategories.vue";
 import { useCategoryStore } from "src/stores/category/categoryStore";
 import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "CategoryViewPage",
@@ -21,10 +20,6 @@ export default defineComponent({
 
     const route = useRoute();
 
-    const router = useRouter();
-
-    const data = ref([]);
-
     onBeforeMount(async () => {
       await fetchData(null);
     });
@@ -32,21 +27,27 @@ export default defineComponent({
     watch(
       () => route.params.slug,
       async (newSlug) => {
+        if (newSlug == null) {
+          store.categorySlug = [];
+          await fetchData(null);
+        }
         await fetchData(newSlug);
       }
     );
 
     const fetchData = async (slug) => {
       if (slug == null) {
-        data.value = await store.getAll("parent__isnull=true");
+        store.data = await store.getAll("parent__isnull=true");
       } else {
-        data.value = await store.getAll("parent__slug=" + slug);
+        store.parentCategory = await store.getAll(
+          "slug=" + slug[slug.length - 1]
+        );
+        store.data = await store.getAll("parent__slug=" + slug);
       }
     };
 
     return {
       store,
-      data,
     };
   },
 });

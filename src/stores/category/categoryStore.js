@@ -39,7 +39,6 @@ export const useCategoryStore = defineStore("category", () => {
     addingCategory,
     create,
     data,
-    getCategory,
     parentCategory,
   };
 });
