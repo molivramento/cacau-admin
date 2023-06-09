@@ -9,7 +9,18 @@ export const useCategoryStore = defineStore("category", () => {
 
   const parentCategory = ref([]);
 
-  const addingCategory = ref(false);
+  const openDialog = ref(false);
+
+  const openUpdateDialog = ref(false);
+
+  const updatingCategory = ref({
+    id: "",
+    name: "",
+    slug: "",
+    keywords: "",
+    description: "",
+    parent: null,
+  });
 
   const getAll = async (filter) => {
     return await api
@@ -33,12 +44,28 @@ export const useCategoryStore = defineStore("category", () => {
       });
   };
 
+  const update = async (data) => {
+    console.log(data);
+    return await api
+      .put("categories/", data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error.message;
+      });
+  };
+
   return {
     getAll,
-    categorySlug,
-    addingCategory,
     create,
+    update,
+    categorySlug,
+    openDialog,
     data,
     parentCategory,
+    updatingCategory,
+    openUpdateDialog,
   };
 });

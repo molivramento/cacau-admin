@@ -16,7 +16,7 @@
           round
           color="primary"
           icon="mdi-plus"
-          @click="store.addingCategory = true"
+          @click="store.openDialog = true"
         />
       </template>
       <template v-slot:body="props">
@@ -36,7 +36,7 @@
               color="primary"
               size="sm"
               icon="edit"
-              @click="() => handleEdit(props.row)"
+              @click="handleUpdate(props.row)"
             />
             <q-btn
               color="negative"
@@ -51,6 +51,7 @@
   </div>
   <div>
     <AddCategoryDialog />
+    <UpdateDialog />
   </div>
 </template>
 
@@ -59,11 +60,12 @@ import { defineComponent, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCategoryStore } from "src/stores/category/categoryStore";
 import AddCategoryDialog from "src/components/category/addCategoryDialog.vue";
+import UpdateDialog from "src/components/category/updateCategory.vue";
 
 export default defineComponent({
   name: "ListCategory",
 
-  components: { AddCategoryDialog },
+  components: { AddCategoryDialog, UpdateDialog },
 
   setup() {
     const router = useRouter();
@@ -90,7 +92,7 @@ export default defineComponent({
         sortable: true,
       },
 
-      { name: "actions", align: "center", label: "Actions", field: "actions" },
+      { name: "actions", align: "right", label: "Actions", field: "actions" },
     ];
 
     const handleBreadcrumb = async (slug) => {
@@ -113,12 +115,23 @@ export default defineComponent({
       router.push({ name: "category", params: { slug: store.categorySlug } });
     };
 
+    const handleUpdate = (category) => {
+      store.updatingCategory.id = category.id;
+      store.updatingCategory.name = category.name;
+      store.updatingCategory.slug = category.slug;
+      store.updatingCategory.keywords = category.keywords;
+      store.updatingCategory.description = category.description;
+      store.updatingCategory.parent = { id: category.parent.id };
+      store.openUpdateDialog = true;
+    };
+
     return {
       rows,
       columns,
       handleNext,
       handleBreadcrumb,
       store,
+      handleUpdate,
     };
   },
 });

@@ -1,7 +1,8 @@
 <template>
-  <q-dialog v-model="store.openDialog" persistent>
+  <q-dialog v-model="store.openUpdateDialog" persistent>
     <q-card>
       <q-card-section class="col items-center" style="width: 500px">
+        Updating...
         <div v-if="store.parentCategory && store.parentCategory[0]">
           <h5 class="q-ma-xs">
             Pai:
@@ -10,24 +11,24 @@
         </div>
         <q-input
           class="q-my-sm"
-          v-model="payload.name"
+          v-model="store.updatingCategory.name"
           type="text"
           label="Categoria"
         />
         <q-input
           class="q-my-sm"
-          v-model="payload.slug"
+          v-model="store.updatingCategory.slug"
           type="text"
           label="Slug"
         />
         <q-editor
           class="q-my-sm"
-          v-model="payload.description"
+          v-model="store.updatingCategory.description"
           min-height="5rem"
         />
         <q-input
           class="q-my-sm"
-          v-model="payload.keywords"
+          v-model="store.updatingCategory.keywords"
           type="text"
           label="Keywords (exemplo: keyword1,keyword2,keyword3)"
         />
@@ -38,61 +39,53 @@
           label="Cancel"
           color="primary"
           v-close-popup
-          @click="store.openDialog = false"
+          @click="store.openUpdateDialog = false"
         />
         <q-btn
           flat
           label="Salvar"
           color="primary"
           v-close-popup
-          @click="handleCreateCategory()"
+          @click="handleUpdateCategory()"
         />
       </q-card-actions>
+      {{ store.updatingCategory.name }}
     </q-card>
   </q-dialog>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useCategoryStore } from "src/stores/category/categoryStore";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
-  name: "AddCategoryDialog",
+  name: "UpdateDialog",
 
   setup() {
     const store = useCategoryStore();
 
     const route = useRoute();
 
-    const payload = ref({
-      id: null,
+    const open = ref(false);
+
+    const data = ref({
+      id: "",
       name: "",
       slug: "",
-      keywords: "",
-      parent: null,
       description: "",
+      keywords: "",
+      parent: "",
     });
 
-    const handleCreateCategory = async () => {
-      if (store.parentCategory[0].id) {
-        payload.value.parent = { id: store.parentCategory[0].id };
-      }
-      store.data = await store.getAll(
-        "parent__slug=" + route.params.slug[route.params.slug.length - 1]
-      );
-      try {
-        await store.create(payload.value);
-        store.openDialog = false;
-      } catch (error) {
-        store.openDialog = true;
-      }
+    const handleUpdateCategory = async () => {
+      await store.update(store.updatingCategory);
     };
 
     return {
       store,
-      payload,
-      handleCreateCategory,
+      data,
+      handleUpdateCategory,
     };
   },
 });
