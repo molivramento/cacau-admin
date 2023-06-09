@@ -28,7 +28,7 @@ const routes = [
       {
         path: "category/:slug*",
         name: "category",
-        component: () => import("pages/category/CategoryPage.vue"),
+        component: () => import("pages/categories/CategoryPage.vue"),
       },
     ],
     meta: {
