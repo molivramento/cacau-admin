@@ -34,7 +34,20 @@ export default function useAuth() {
     store.authenticated = false;
   };
 
+  const me = async () => {
+    await api
+      .get("auth/me")
+      .then((res) => {
+        user.value = res.data;
+        return true;
+      })
+      .catch((error) => {
+        return false;
+      });
+  };
+
   return {
+    me,
     user,
     login,
     isLoggedIn,

@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useAuthStore = defineStore("auth", {
-  state: () => ({
-    authenticated: false,
-  }),
-  persist: true,
+export const useAuthStore = defineStore("auth", () => {
+  const authenticated = ref(false);
+  const user = ref(null);
+
+  return {
+    authenticated,
+  };
 });

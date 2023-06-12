@@ -17,10 +17,8 @@ export default defineComponent({
 
     const getMe = async () => {
       try {
-        me.value = await api.get("/auth/me/");
-      } catch (error) {
-        console.log(error);
-      }
+        me.value = await api.get("/auth/me");
+      } catch (error) {}
     };
 
     return {

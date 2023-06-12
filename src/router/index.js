@@ -35,8 +35,9 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to) => {
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, me } = useAuth();
     if (
+      me() &&
       !isLoggedIn() &&
       to.meta.requiresAuth &&
       !Object.keys(to.query).includes("fromEmail")
@@ -46,12 +47,13 @@ export default route(function (/* { store, ssrContext } */) {
       };
     }
     if (
-      (isLoggedIn() && to.name === "login") ||
-      to.name === "loginDefault" ||
-      to.name === "register" ||
-      to.name === "forgot-password" ||
-      to.name === "verify-email" ||
-      to.name === "verify-email-success"
+      isLoggedIn() &&
+      (to.name === "login" ||
+        to.name === "loginDefault" ||
+        to.name === "register" ||
+        to.name === "forgot-password" ||
+        to.name === "verify-email" ||
+        to.name === "verify-email-success")
     ) {
       return {
         name: "dashboard",
